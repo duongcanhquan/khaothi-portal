@@ -1,1 +1,265 @@
 
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cổng Khảo Thí - Cao Đẳng Việt Mỹ Hà Nội</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-orange: #F37021; /* Màu cam Việt Mỹ */
+            --primary-blue: #005B9C;   /* Màu xanh Việt Mỹ */
+            --glass-bg: rgba(255, 255, 255, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            overflow: hidden; /* Ẩn thanh cuộn do hiệu ứng nền */
+            position: relative;
+        }
+
+        /* --- BACKGROUND ANIMATION --- */
+        .blob {
+            position: absolute;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.8;
+            animation: float 10s infinite ease-in-out alternate;
+        }
+        .blob-1 {
+            top: -10%;
+            left: -10%;
+            width: 500px;
+            height: 500px;
+            background: var(--primary-orange);
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+        }
+        .blob-2 {
+            bottom: -10%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: var(--primary-blue);
+            border-radius: 60% 40% 30% 70% / 50% 30% 50% 60%;
+            animation-delay: -5s;
+        }
+        .blob-3 {
+            bottom: 20%;
+            left: 20%;
+            width: 300px;
+            height: 300px;
+            background: #a8edea; 
+            border-radius: 50%;
+            opacity: 0.5;
+            animation-duration: 15s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(50px, 50px) rotate(20deg); }
+        }
+
+        /* --- MAIN CONTAINER --- */
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo {
+            max-width: 250px;
+            width: 80%;
+            height: auto;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+            transition: transform 0.3s;
+        }
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 700;
+            background: -webkit-linear-gradient(45deg, var(--primary-blue), var(--primary-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        p.subtitle {
+            color: #555;
+            margin-bottom: 50px;
+            font-size: 1.1rem;
+        }
+
+        /* --- GRID MENU --- */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            perspective: 1000px; /* Cho hiệu ứng 3D */
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 20px;
+            padding: 40px 20px;
+            text-decoration: none;
+            color: #333;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: all 0.1s ease; /* Transition nhanh cho JS tilt */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        /* Hiệu ứng ánh sáng quét qua khi hover */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: 0.5s;
+        }
+        .card:hover::before {
+            left: 100%;
+        }
+
+        .card-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 4px 4px rgba(0,0,0,0.1));
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--primary-blue);
+        }
+
+        .card-desc {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            margin-top: 40px;
+            font-size: 0.85rem;
+            color: #666;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            padding-top: 20px;
+        }
+
+        /* Responsive Mobile */
+        @media (max-width: 768px) {
+            .container { padding: 20px; width: 95%; }
+            h1 { font-size: 1.5rem; }
+            .card { padding: 30px 15px; }
+            .blob { opacity: 0.6; } /* Giảm độ đậm nền trên mobile */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <div class="container">
+        <a href="https://caodangvietmyhanoi.edu.vn" target="_blank">
+            <img src="https://raw.githubusercontent.com/duongcanhquan/khaothi-portal/main/Logo%20Cao%20%C4%91%E1%BA%B3ng%20Vi%E1%BB%87t%20M%E1%BB%B9%20-%20b%E1%BA%A3n%20chu%E1%BA%A9n%202025-06.png" alt="Logo Cao Đẳng Việt Mỹ Hà Nội" class="logo">
+        </a>
+        
+        <h1>Phòng Khảo Thí & Đảm Bảo Chất Lượng</h1>
+        <p class="subtitle">Hệ thống dịch vụ sinh viên trực tuyến</p>
+
+        <div class="menu-grid">
+            <a href="./lichthi/" class="card js-tilt" data-tilt>
+                <div class="card-icon">📅</div>
+                <div class="card-title">LỊCH THI</div>
+                <div class="card-desc">Tra cứu lịch thi, phòng thi và giờ thi chi tiết</div>
+            </a>
+
+            <a href="./thimay/" class="card js-tilt" data-tilt>
+                <div class="card-icon">💻</div>
+                <div class="card-title">THI MÁY</div>
+                <div class="card-desc">Truy cập hệ thống làm bài thi online</div>
+            </a>
+
+            <a href="./phuckhao/" class="card js-tilt" data-tilt>
+                <div class="card-icon">⚖️</div>
+                <div class="card-title">PHÚC KHẢO</div>
+                <div class="card-desc">Gửi đơn phúc khảo và theo dõi kết quả</div>
+            </a>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 Cao đẳng Việt Mỹ Hà Nội. All rights reserved.</p>
+            <p>Designed for Student Success</p>
+        </footer>
+    </div>
+
+    <script type="text/javascript">
+        // Hàm xử lý hiệu ứng nghiêng 3D đơn giản không cần thư viện ngoài
+        const cards = document.querySelectorAll('.js-tilt');
+
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = ((y - centerY) / centerY) * -10; // Đảo ngược trục để nghiêng đúng
+                const rotateY = ((x - centerX) / centerX) * 10;
+
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+            });
+        });
+    </script>
+
+</body>
+</html>
