@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>Lịch Thi VietMy College</title>
+    <title>Lịch Thi Theo Tuần</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -11,235 +11,226 @@
 
     <style>
         :root {
-            --glass: rgba(255, 255, 255, 0.96);
-            --primary: #2563eb; --accent: #f59e0b; /* Màu cam cho thi cử (Cảnh báo/Chú ý) */
-            --success: #059669; --danger: #dc2626;
-            /* Đổi background sang tông xanh đậm/tím than cho trang trọng hơn style lịch học */
-            --bg-grad: linear-gradient(-45deg, #1e3c72, #2a5298, #4a00e0, #8e2de2);
+            --glass: rgba(255, 255, 255, 0.98);
+            --primary: #4f46e5; 
+            --accent: #f97316; /* Màu cam nổi bật cho ngày thi */
+            --bg-grad: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
         body {
             font-family: 'Montserrat', sans-serif;
-            background: var(--bg-grad); background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            min-height: 100vh; margin: 0; color: #333; padding-bottom: 50px;
+            background: var(--bg-grad);
+            min-height: 100vh; margin: 0; padding-bottom: 60px;
         }
-        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
         /* HEADER */
         .glass-header {
-            background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
-            padding: 8px 15px; position: sticky; top: 0; z-index: 1000;
-            border-bottom: 1px solid rgba(0,0,0,0.05); box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255,255,255,0.95); padding: 10px 15px; 
+            position: sticky; top: 0; z-index: 999;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;
         }
-        .header-left { display: flex; align-items: center; gap: 8px; }
-        .logo-img { height: 38px; width: auto; }
-        .logo-text { 
-            font-weight: 800; font-size: 0.8rem; text-transform: uppercase;
-            background: linear-gradient(to right, #1e3c72, #2a5298); 
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-            line-height: 1.1;
+        .logo-area { display: flex; align-items: center; gap: 10px; }
+        .logo-img { height: 40px; }
+        .logo-text { font-weight: 800; color: var(--primary); font-size: 0.9rem; line-height: 1.2; text-transform: uppercase;}
+
+        /* WEEK NAVIGATOR */
+        .week-nav {
+            display: flex; gap: 10px; margin-top: 10px;
+            background: #f1f5f9; padding: 5px; border-radius: 12px;
         }
-        .total-badge {
-            background: #dc2626; /* Màu đỏ cho số lượng ca thi */
-            color: white; font-weight: 700; font-size: 0.7rem;
-            padding: 4px 10px; border-radius: 20px; white-space: nowrap;
+        .nav-btn {
+            flex: 1; border: none; padding: 8px; border-radius: 8px;
+            font-weight: 700; font-size: 0.85rem; color: #64748b; background: transparent;
+            transition: 0.3s;
+        }
+        .nav-btn.active {
+            background: var(--primary); color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
-        /* FULL DATE DISPLAY */
-        .full-date-display {
-            text-align: center; color: white; font-weight: 700; font-size: 0.85rem;
-            padding: 5px 0; text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-            text-transform: uppercase; letter-spacing: 0.5px;
+        /* FILTERS */
+        .filter-bar { margin-top: 15px; }
+        .form-select, .form-control {
+            border-radius: 8px; border: 1px solid #e2e8f0; font-weight: 600; font-size: 0.85rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
+        .form-select:focus, .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2); }
 
-        /* DATE NAVIGATOR */
-        .date-container { overflow-x: auto; white-space: nowrap; padding: 5px 10px; text-align: center; scrollbar-width: none; }
-        .date-btn {
-            border: none; background: rgba(255,255,255,0.3); padding: 6px 12px; margin: 0 2px; border-radius: 8px;
-            font-weight: 700; font-size: 0.75rem; transition: 0.3s; display: inline-block; color: rgba(255,255,255,0.9);
-        }
-        .date-btn.active { background: #fff; color: var(--primary); transform: scale(1.05); box-shadow: 0 3px 8px rgba(0,0,0,0.2); }
-        .date-btn.disabled { opacity: 0.3; pointer-events: none; display: none; /* Ẩn luôn ngày không có lịch thi */ }
-
-        /* GRID SYSTEM */
+        /* GRID & CARD */
         .schedule-grid {
-            display: grid; gap: 10px; padding: 10px;
-            grid-template-columns: repeat(2, 1fr);
-            align-items: stretch;
+            display: grid; gap: 12px; padding: 15px;
+            grid-template-columns: repeat(1, 1fr); /* Mobile 1 cột */
         }
-        @media (min-width: 1200px) { .schedule-grid { grid-template-columns: repeat(5, 1fr); } }
-        @media (min-width: 768px) and (max-width: 1199px) { .schedule-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media(min-width: 768px) { .schedule-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media(min-width: 1200px) { .schedule-grid { grid-template-columns: repeat(5, 1fr); } }
 
-        /* CARD DESIGN - LỊCH THI STYLE */
-        .class-card {
-            background: var(--glass); border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            border-left: 4px solid var(--accent); /* Viền cam đánh dấu lịch thi */
-            display: flex; flex-direction: column; justify-content: space-between;
-            height: 100%; overflow: hidden; position: relative;
+        .exam-card {
+            background: var(--glass); border-radius: 12px;
+            border-left: 5px solid var(--accent); /* Viền màu cam */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            display: flex; flex-direction: column; overflow: hidden;
+            position: relative; transition: transform 0.2s;
+        }
+        .exam-card:hover { transform: translateY(-3px); }
+
+        .card-header-date {
+            background: #fff7ed; color: var(--accent);
+            padding: 6px 12px; font-weight: 800; font-size: 0.8rem;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px dashed #fdba74;
         }
         
-        .card-body-custom { padding: 10px; flex: 1; display: flex; flex-direction: column; gap: 6px; }
-
-        /* TEXT STYLING */
-        .row-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2px; }
+        .card-body { padding: 10px 12px; flex: 1; }
         
-        .badge-time { 
-            background: #1e3c72; color: white; font-size: 0.7rem; font-weight: 800; 
-            padding: 3px 8px; border-radius: 4px; 
-        }
-        .badge-form {
-            background: var(--accent); color: white; font-size: 0.65rem; font-weight: 800;
-            padding: 3px 6px; border-radius: 4px; text-transform: uppercase;
-        }
-
-        .text-subject { 
-            font-size: 0.95rem; font-weight: 800; color: #1a202c; 
-            line-height: 1.3; margin-bottom: 2px;
+        .subject-name {
+            font-size: 1rem; font-weight: 800; color: #1e293b;
+            margin-bottom: 5px; line-height: 1.3;
             display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
         }
         
-        .text-class { 
-            font-size: 0.75rem; font-weight: 600; color: #4b5563; 
-            background: #f3f4f6; padding: 2px 5px; border-radius: 4px; width: fit-content;
-            margin-bottom: 4px;
+        .class-badge {
+            display: inline-block; background: #e0e7ff; color: var(--primary);
+            font-size: 0.7rem; font-weight: 700; padding: 3px 8px; border-radius: 4px;
+            margin-bottom: 8px;
         }
+
+        .info-table { width: 100%; font-size: 0.75rem; color: #475569; }
+        .info-table td { padding: 2px 0; vertical-align: top; }
+        .info-table i { width: 18px; color: #94a3b8; }
+        .info-val { font-weight: 600; color: #334155; }
+
+        .card-footer-custom {
+            padding: 8px 12px; background: #f8fafc; border-top: 1px solid #e2e8f0;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .room-badge {
+            background: #dcfce7; color: #166534; padding: 3px 10px; border-radius: 20px;
+            font-weight: 800; font-size: 0.75rem; border: 1px solid #bbf7d0;
+        }
+        .format-badge {
+            font-size: 0.7rem; font-weight: 700; color: #64748b; text-transform: uppercase;
+        }
+
+        /* PAGINATION & LOADER */
+        #pagination { display: flex; justify-content: center; gap: 5px; padding-bottom: 20px; flex-wrap: wrap; }
+        .page-btn { width: 35px; height: 35px; border: none; border-radius: 8px; background: rgba(255,255,255,0.4); font-weight: 700; color: white; }
+        .page-btn.active { background: white; color: var(--primary); }
         
-        .divider { border-bottom: 1px dashed #cbd5e1; margin: 2px 0; }
-
-        .info-row { font-size: 0.7rem; font-weight: 600; display: flex; align-items: center; gap: 6px; color: #475569; }
-        .info-row i { width: 14px; text-align: center; color: var(--primary); }
+        #loader { text-align: center; color: white; padding: 30px; display: none; }
+        #emptyMsg { text-align: center; color: white; padding: 30px; display: none; font-weight: 600; }
         
-        .badge-room { 
-            background: #dbeafe; color: #1e40af; padding: 2px 8px; border-radius: 12px; 
-            font-weight: 800; font-size: 0.7rem; margin-left: auto;
-        }
-
-        /* PAGINATION */
-        .pagination-wrapper { display: flex; gap: 5px; padding: 5px 15px 10px 15px; flex-wrap: wrap; justify-content: center;}
-        .page-btn { 
-            width: 32px; height: 32px; border: none; border-radius: 50%; background: rgba(255,255,255,0.2); 
-            font-weight: 700; color: white; font-size: 0.8rem; transition: 0.2s;
-        }
-        .page-btn.active { background: white; color: var(--primary); transform: scale(1.1); box-shadow: 0 0 10px rgba(255,255,255,0.3); }
-
-        #loader { text-align: center; color: white; padding: 40px; display: none; }
+        .week-range-text { font-size: 0.7rem; color: #64748b; text-align: center; margin-top: 2px; font-weight: 500;}
     </style>
 </head>
 <body>
 
     <div class="glass-header">
-        <div class="header-left">
+        <div class="logo-area">
             <img src="https://github.com/duongcanhquan/image/blob/main/Logo%20Cao%20%C4%91a%CC%86%CC%89ng%20Vie%CC%A3%CC%82t%20My%CC%83%20-%20ba%CC%89n%20chua%CC%82%CC%89n%202025-01.png?raw=true" class="logo-img">
             <div class="logo-text">TRA CỨU LỊCH THI<br>VIETMY COLLEGE</div>
         </div>
-        <div class="total-badge">CA THI: <span id="totalCount">0</span></div>
-    </div>
 
-    <div id="fullDateDisplay" class="full-date-display">...</div>
-    <div class="date-container" id="dateNav"></div>
+        <div class="week-nav">
+            <button class="nav-btn active" id="btnCurrent" onclick="switchWeek('current')">TUẦN NÀY</button>
+            <button class="nav-btn" id="btnNext" onclick="switchWeek('next')">TUẦN SAU</button>
+        </div>
+        <div class="week-range-text" id="weekRangeDisplay">...</div>
 
-    <div class="container-fluid px-3">
-        <div class="row g-2 mb-2">
-            <div class="col-4">
-                <select id="selCoso" class="form-select form-select-sm fw-bold shadow-none" onchange="resetPageAndRender()"><option value="">Cơ sở</option></select>
+        <div class="filter-bar row g-2">
+            <div class="col-6 col-md-3">
+                <select id="selCoso" class="form-select shadow-none" onchange="resetPageAndRender()">
+                    <option value="">Tất cả Cơ sở</option>
+                </select>
             </div>
-            <div class="col-8">
-                <input id="inpSearch" class="form-control form-select-sm fw-bold shadow-none" placeholder="Tìm Lớp, Môn, SV..." oninput="resetPageAndRender()">
+            <div class="col-6 col-md-3">
+                <select id="selHinhThuc" class="form-select shadow-none" onchange="resetPageAndRender()">
+                    <option value="">Hình thức thi</option>
+                </select>
+            </div>
+            <div class="col-12 col-md-6">
+                <input id="inpSearch" class="form-control shadow-none" placeholder="Tìm Môn, Giám thị, Lớp..." oninput="resetPageAndRender()">
             </div>
         </div>
+        
+        <div class="text-end mt-2" style="font-size: 0.7rem; color: #64748b; font-weight: 600;">
+            Tổng số ca thi: <span id="totalCount" class="text-danger">0</span>
+        </div>
     </div>
+
+    <div id="loader"><div class="spinner-border" role="status"></div><div class="mt-2">Đang tải dữ liệu...</div></div>
     
-    <div class="pagination-wrapper" id="pagination"></div>
-    <div id="loader"><div class="spinner-border text-white" role="status"></div><div class="text-white mt-2">Đang tải dữ liệu thi...</div></div>
     <div class="schedule-grid" id="grid"></div>
+    <div id="emptyMsg">Không có lịch thi nào trong tuần này.</div>
+    <div id="pagination"></div>
 
     <script>
         // ===============================================
-        // THAY LINK APP SCRIPT MỚI CỦA BẠN VÀO ĐÂY
-        const API_URL = "https://script.google.com/macros/s/AKfycby18SZn-3u-bPATmzASEq2XlatFWR1dwStxyBkPxv5026xjfW-WeyMYeXjK9xf72lij/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbzXBXoR9GNKfrIOC6xcWCuBLmvv78SBDWgm5ArUkfvG-Yar-2Gxo9jPBtrJ3Akj1jYH/exec";
         // ===============================================
 
-        let allData = { schedule: [], available: [] };
-        let currentDate = "";
+        let allData = [];
+        let currentWeekMode = 'current';
         let currentPage = 1;
-        const itemsPerPage = 20;
+        const itemsPerPage = 15;
 
-        async function init() {
-            const d = new Date();
-            const todayStr = formatDate(d);
-            await loadData(todayStr);
+        // Map thứ
+        const dayMap = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+
+        function init() {
+            switchWeek('current');
         }
 
-        async function loadData(dateStr) {
+        function switchWeek(mode) {
+            currentWeekMode = mode;
+            // Update UI Button
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(mode === 'current' ? 'btnCurrent' : 'btnNext').classList.add('active');
+            loadData(mode);
+        }
+
+        async function loadData(mode) {
             document.getElementById('loader').style.display = 'block';
             document.getElementById('grid').innerHTML = '';
             document.getElementById('pagination').innerHTML = '';
-            currentDate = dateStr;
-            
-            updateFullDateDisplay(dateStr);
-            // Render tạm date nav (có thể chưa có data available)
-            renderDateNav(); 
+            document.getElementById('emptyMsg').style.display = 'none';
 
             try {
-                const res = await fetch(`${API_URL}?date=${dateStr}&t=${Date.now()}`);
+                const res = await fetch(`${API_URL}?week=${mode}&t=${Date.now()}`);
                 const data = await res.json();
                 
-                if(data.error) { 
-                    document.getElementById('grid').innerHTML = `<div class="text-white text-center w-100 p-3">${data.error}</div>`; 
-                    return; 
-                }
+                if (data.error) { alert(data.error); return; }
 
-                allData.available = data.available_sheets || []; // Danh sách các ngày có thi
+                allData = data.schedule || [];
                 
-                // Sort theo giờ thi
-                let rawSchedule = data.schedule || [];
-                allData.schedule = rawSchedule.sort((a, b) => parseTime(a.gio) - parseTime(b.gio));
+                // Hiển thị khoảng thời gian
+                document.getElementById('weekRangeDisplay').innerText = `(${data.week_start} - ${data.week_end})`;
 
-                // Nếu ngày hiện tại không có trong danh sách available, và danh sách available có dữ liệu
-                // Tự động nhảy tới ngày có lịch thi gần nhất đầu tiên
-                if (allData.available.length > 0 && !allData.available.includes(dateStr)) {
-                     // Nếu dữ liệu trả về rỗng (do sai ngày), gọi lại API với ngày đầu tiên có lịch
-                     // Tuy nhiên để tránh loop, ta chỉ load lại nếu data.schedule rỗng
-                     if(allData.schedule.length === 0) {
-                         // Redirect sang ngày đầu tiên có lịch
-                         console.log("Ngày này không có lịch, chuyển sang:", allData.available[0]);
-                         loadData(allData.available[0]);
-                         return;
-                     }
-                }
-
-                renderDateNav();
-                updateCosoDropdown();
+                populateDropdowns();
                 resetPageAndRender();
 
-            } catch(e) {
+            } catch (e) {
                 console.error(e);
-                document.getElementById('grid').innerHTML = '<div class="text-white text-center w-100 p-3">Lỗi kết nối Server!</div>';
+                document.getElementById('emptyMsg').innerText = "Lỗi kết nối!";
+                document.getElementById('emptyMsg').style.display = 'block';
             } finally {
                 document.getElementById('loader').style.display = 'none';
             }
         }
 
-        function updateFullDateDisplay(dateStr) {
-            const parts = dateStr.split('/');
-            const d = new Date(parts[2], parts[1] - 1, parts[0]);
-            const days = ['CHỦ NHẬT', 'THỨ 2', 'THỨ 3', 'THỨ 4', 'THỨ 5', 'THỨ 6', 'THỨ 7'];
-            const dayName = days[d.getDay()];
-            document.getElementById('fullDateDisplay').innerText = `${dayName}, ${dateStr}`;
-        }
+        function populateDropdowns() {
+            // Cơ sở
+            const cosos = [...new Set(allData.map(i => i.coso))].filter(Boolean);
+            const selCoso = document.getElementById('selCoso');
+            const curCoso = selCoso.value;
+            selCoso.innerHTML = '<option value="">Tất cả Cơ sở</option>' + cosos.map(c => `<option value="${c}">${c}</option>`).join('');
+            selCoso.value = cosos.includes(curCoso) ? curCoso : "";
 
-        function parseTime(timeStr) {
-            if (!timeStr) return 9999;
-            try {
-                const firstPart = timeStr.split('-')[0].trim();
-                const parts = firstPart.split(/[:h]/);
-                let h = parseInt(parts[0]);
-                let m = parts[1] ? parseInt(parts[1]) : 0;
-                return h * 60 + m;
-            } catch (e) { return 9999; }
+            // Hình thức
+            const hinhthucs = [...new Set(allData.map(i => i.hinhthuc))].filter(Boolean);
+            const selHT = document.getElementById('selHinhThuc');
+            const curHT = selHT.value;
+            selHT.innerHTML = '<option value="">Hình thức thi</option>' + hinhthucs.map(h => `<option value="${h}">${h}</option>`).join('');
+            selHT.value = hinhthucs.includes(curHT) ? curHT : "";
         }
 
         function resetPageAndRender() { currentPage = 1; renderGrid(); }
@@ -247,125 +238,91 @@
         function renderGrid() {
             const grid = document.getElementById('grid');
             const pagin = document.getElementById('pagination');
-            const cosoFilter = document.getElementById('selCoso').value;
-            const searchFilter = document.getElementById('inpSearch').value.toLowerCase();
+            
+            // Get Filters
+            const fCoso = document.getElementById('selCoso').value;
+            const fHT = document.getElementById('selHinhThuc').value;
+            const fSearch = document.getElementById('inpSearch').value.toLowerCase();
 
-            const filtered = allData.schedule.filter(item => {
-                const searchStr = `${item.lop} ${item.mon} ${item.giamthi} ${item.phong} ${item.hinhthuc}`.toLowerCase();
-                const matchCoso = !cosoFilter || item.coso === cosoFilter;
-                const matchSearch = !searchFilter || searchStr.includes(searchFilter);
-                return matchCoso && matchSearch;
+            // Filter logic
+            const filtered = allData.filter(item => {
+                const searchSource = `${item.mon} ${item.giamthi} ${item.lop}`.toLowerCase();
+                
+                const matchCoso = !fCoso || item.coso === fCoso;
+                const matchHT = !fHT || item.hinhthuc === fHT;
+                const matchSearch = !fSearch || searchSource.includes(fSearch);
+                
+                return matchCoso && matchHT && matchSearch;
             });
 
-            document.getElementById('totalCount').innerText = `${filtered.length}`;
+            document.getElementById('totalCount').innerText = filtered.length;
 
-            if(filtered.length === 0) {
-                grid.innerHTML = '<div class="text-white text-center w-100 py-5" style="grid-column: 1 / -1">Không tìm thấy ca thi nào.</div>';
+            if (filtered.length === 0) {
+                document.getElementById('emptyMsg').style.display = 'block';
+                grid.innerHTML = '';
                 pagin.innerHTML = '';
                 return;
+            } else {
+                document.getElementById('emptyMsg').style.display = 'none';
             }
 
+            // Pagination
             const totalPages = Math.ceil(filtered.length / itemsPerPage);
             const start = (currentPage - 1) * itemsPerPage;
             const pageData = filtered.slice(start, start + itemsPerPage);
 
             grid.innerHTML = pageData.map((item, index) => {
-                const delay = (index % 10) * 0.05; 
-                
-                // Logic hiển thị phòng thi
-                let phongHienThi = item.phong;
-                if (!phongHienThi.toLowerCase().includes('phòng') && !phongHienThi.toLowerCase().includes('online')) {
-                    phongHienThi = "P." + phongHienThi;
-                }
+                const dateParts = item.ngay.split('/');
+                const dObj = new Date(dateParts[2], dateParts[1]-1, dateParts[0]);
+                const dayName = dayMap[dObj.getDay()];
 
                 return `
-                <div class="class-card animate__animated animate__fadeInUp" style="animation-delay: ${delay}s">
-                    <div class="card-body-custom">
-                        <div class="row-header">
-                            <div class="badge-time">${item.gio}</div>
-                            <div class="badge-form">${item.hinhthuc}</div>
-                        </div>
-                        
-                        <div>
-                            <div class="text-subject" title="${item.mon}">${item.mon}</div>
-                            <div class="text-class" title="${item.lop}">${item.lop}</div>
-                        </div>
-
-                        <div class="divider"></div>
-
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="info-row" title="Giám thị">
-                                <i class="fa-solid fa-user-shield"></i> 
-                                <span>${item.giamthi || '--'}</span>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="info-row">
-                                <i class="fa-solid fa-location-dot"></i> 
-                                <span>${item.coso}</span>
-                            </div>
-                            <div class="badge-room">${phongHienThi}</div>
-                        </div>
+                <div class="exam-card animate__animated animate__fadeInUp" style="animation-delay: ${index * 0.05}s">
+                    <div class="card-header-date">
+                        <span><i class="fa-regular fa-calendar-check me-1"></i> ${dayName}, ${item.ngay}</span>
+                        <span style="color: #333; font-weight:900;">${item.gio}</span>
                     </div>
-                </div>`;
+                    <div class="card-body">
+                        <div class="subject-name" title="${item.mon}">${item.mon}</div>
+                        <div class="class-badge">${item.lop}</div>
+                        
+                        <table class="info-table">
+                            <tr>
+                                <td><i class="fa-solid fa-user-shield"></i></td>
+                                <td class="info-val">${item.giamthi || '--'}</td>
+                            </tr>
+                            <tr>
+                                <td><i class="fa-solid fa-map-pin"></i></td>
+                                <td>${item.coso}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="card-footer-custom">
+                        <div class="format-badge">${item.hinhthuc || 'THI'}</div>
+                        <div class="room-badge">${item.phong.includes('P.') ? item.phong : 'P.'+item.phong}</div>
+                    </div>
+                </div>
+                `;
             }).join('');
 
+            // Render Pagination Buttons
             if(totalPages > 1) {
                 let html = '';
+                // Logic nút gọn (First, Prev, Current, Next, Last) có thể thêm nếu muốn
+                // Hiện tại hiển thị hết nếu ít trang
                 for(let i = 1; i <= totalPages; i++) {
-                    html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+                    if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                         html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+                    } else if (i === currentPage - 2 || i === currentPage + 2) {
+                        html += `<span style="color:white; align-self:center;">...</span>`;
+                    }
                 }
                 pagin.innerHTML = html;
             } else { pagin.innerHTML = ''; }
         }
 
-        function updateCosoDropdown() {
-            const sel = document.getElementById('selCoso');
-            const current = sel.value;
-            const list = [...new Set(allData.schedule.map(i => i.coso))].filter(Boolean);
-            sel.innerHTML = '<option value="">Cơ sở</option>' + list.map(c => `<option value="${c}">${c}</option>`).join('');
-            sel.value = current;
-        }
-
-        function renderDateNav() {
-            const nav = document.getElementById('dateNav');
-            nav.innerHTML = '';
-            
-            // Logic mới: Hiển thị các ngày có trong available (từ sheet)
-            // Nếu available rỗng (lần đầu load), hiển thị +/- 3 ngày quanh hôm nay
-            
-            let datesToShow = [];
-            if (allData.available && allData.available.length > 0) {
-                datesToShow = allData.available;
-            } else {
-                const today = new Date();
-                for(let i=-2; i<=2; i++) {
-                    const d = new Date(); d.setDate(today.getDate() + i);
-                    datesToShow.push(formatDate(d));
-                }
-            }
-
-            datesToShow.forEach(dStr => {
-                const parts = dStr.split('/');
-                // Chỉ hiển thị ngày/tháng để nút gọn hơn
-                const displayDate = `${parts[0]}/${parts[1]}`; 
-                
-                const btn = document.createElement('button');
-                btn.className = `date-btn ${dStr === currentDate ? 'active' : ''}`;
-                btn.innerHTML = `<div>${displayDate}</div>`;
-                btn.onclick = () => { if(dStr !== currentDate) loadData(dStr); };
-                nav.appendChild(btn);
-                
-                if(dStr === currentDate) setTimeout(()=>btn.scrollIntoView({inline:"center",behavior:"smooth"}),100);
-            });
-        }
-        
-        function formatDate(date) {
-            return `${String(date.getDate()).padStart(2,'0')}/${String(date.getMonth()+1).padStart(2,'0')}/${date.getFullYear()}`;
-        }
-
         function goToPage(p) { currentPage = p; renderGrid(); window.scrollTo({top:0, behavior:'smooth'}); }
-        
+
         init();
     </script>
 </body>
