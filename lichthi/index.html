@@ -1,32 +1,372 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Lịch Thi Trực Tuyến - Cao Đẳng Việt Mỹ Hà Nội</title>
-    <link rel="icon" href="https://raw.githubusercontent.com/duongcanhquan/image/main/logo%20vietmy.webp">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Lịch Thi VietMy College</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
     <style>
-        /* CSS để iframe tràn màn hình, không bị viền trắng */
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            width: 100%;
-            overflow: hidden; /* Ẩn thanh cuộn của trang mẹ */
+        :root {
+            --glass: rgba(255, 255, 255, 0.96);
+            --primary: #2563eb; --accent: #f59e0b; /* Màu cam cho thi cử (Cảnh báo/Chú ý) */
+            --success: #059669; --danger: #dc2626;
+            /* Đổi background sang tông xanh đậm/tím than cho trang trọng hơn style lịch học */
+            --bg-grad: linear-gradient(-45deg, #1e3c72, #2a5298, #4a00e0, #8e2de2);
         }
-        iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--bg-grad); background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh; margin: 0; color: #333; padding-bottom: 50px;
         }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        /* HEADER */
+        .glass-header {
+            background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
+            padding: 8px 15px; position: sticky; top: 0; z-index: 1000;
+            border-bottom: 1px solid rgba(0,0,0,0.05); box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .header-left { display: flex; align-items: center; gap: 8px; }
+        .logo-img { height: 38px; width: auto; }
+        .logo-text { 
+            font-weight: 800; font-size: 0.8rem; text-transform: uppercase;
+            background: linear-gradient(to right, #1e3c72, #2a5298); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+            line-height: 1.1;
+        }
+        .total-badge {
+            background: #dc2626; /* Màu đỏ cho số lượng ca thi */
+            color: white; font-weight: 700; font-size: 0.7rem;
+            padding: 4px 10px; border-radius: 20px; white-space: nowrap;
+        }
+
+        /* FULL DATE DISPLAY */
+        .full-date-display {
+            text-align: center; color: white; font-weight: 700; font-size: 0.85rem;
+            padding: 5px 0; text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
+        /* DATE NAVIGATOR */
+        .date-container { overflow-x: auto; white-space: nowrap; padding: 5px 10px; text-align: center; scrollbar-width: none; }
+        .date-btn {
+            border: none; background: rgba(255,255,255,0.3); padding: 6px 12px; margin: 0 2px; border-radius: 8px;
+            font-weight: 700; font-size: 0.75rem; transition: 0.3s; display: inline-block; color: rgba(255,255,255,0.9);
+        }
+        .date-btn.active { background: #fff; color: var(--primary); transform: scale(1.05); box-shadow: 0 3px 8px rgba(0,0,0,0.2); }
+        .date-btn.disabled { opacity: 0.3; pointer-events: none; display: none; /* Ẩn luôn ngày không có lịch thi */ }
+
+        /* GRID SYSTEM */
+        .schedule-grid {
+            display: grid; gap: 10px; padding: 10px;
+            grid-template-columns: repeat(2, 1fr);
+            align-items: stretch;
+        }
+        @media (min-width: 1200px) { .schedule-grid { grid-template-columns: repeat(5, 1fr); } }
+        @media (min-width: 768px) and (max-width: 1199px) { .schedule-grid { grid-template-columns: repeat(3, 1fr); } }
+
+        /* CARD DESIGN - LỊCH THI STYLE */
+        .class-card {
+            background: var(--glass); border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--accent); /* Viền cam đánh dấu lịch thi */
+            display: flex; flex-direction: column; justify-content: space-between;
+            height: 100%; overflow: hidden; position: relative;
+        }
+        
+        .card-body-custom { padding: 10px; flex: 1; display: flex; flex-direction: column; gap: 6px; }
+
+        /* TEXT STYLING */
+        .row-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2px; }
+        
+        .badge-time { 
+            background: #1e3c72; color: white; font-size: 0.7rem; font-weight: 800; 
+            padding: 3px 8px; border-radius: 4px; 
+        }
+        .badge-form {
+            background: var(--accent); color: white; font-size: 0.65rem; font-weight: 800;
+            padding: 3px 6px; border-radius: 4px; text-transform: uppercase;
+        }
+
+        .text-subject { 
+            font-size: 0.95rem; font-weight: 800; color: #1a202c; 
+            line-height: 1.3; margin-bottom: 2px;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        
+        .text-class { 
+            font-size: 0.75rem; font-weight: 600; color: #4b5563; 
+            background: #f3f4f6; padding: 2px 5px; border-radius: 4px; width: fit-content;
+            margin-bottom: 4px;
+        }
+        
+        .divider { border-bottom: 1px dashed #cbd5e1; margin: 2px 0; }
+
+        .info-row { font-size: 0.7rem; font-weight: 600; display: flex; align-items: center; gap: 6px; color: #475569; }
+        .info-row i { width: 14px; text-align: center; color: var(--primary); }
+        
+        .badge-room { 
+            background: #dbeafe; color: #1e40af; padding: 2px 8px; border-radius: 12px; 
+            font-weight: 800; font-size: 0.7rem; margin-left: auto;
+        }
+
+        /* PAGINATION */
+        .pagination-wrapper { display: flex; gap: 5px; padding: 5px 15px 10px 15px; flex-wrap: wrap; justify-content: center;}
+        .page-btn { 
+            width: 32px; height: 32px; border: none; border-radius: 50%; background: rgba(255,255,255,0.2); 
+            font-weight: 700; color: white; font-size: 0.8rem; transition: 0.2s;
+        }
+        .page-btn.active { background: white; color: var(--primary); transform: scale(1.1); box-shadow: 0 0 10px rgba(255,255,255,0.3); }
+
+        #loader { text-align: center; color: white; padding: 40px; display: none; }
     </style>
 </head>
 <body>
-    <iframe src="https://script.google.com/a/macros/caodangvietmy.edu.vn/s/AKfycbyU2F3hRn_oSOf1QTJl1Tyl1yDeQVIC0Vc8Lld5v_5Mnm9JSGiSJmZ5GuTGlXnxwUpw/exec"></iframe>
+
+    <div class="glass-header">
+        <div class="header-left">
+            <img src="https://github.com/duongcanhquan/image/blob/main/Logo%20Cao%20%C4%91a%CC%86%CC%89ng%20Vie%CC%A3%CC%82t%20My%CC%83%20-%20ba%CC%89n%20chua%CC%82%CC%89n%202025-01.png?raw=true" class="logo-img">
+            <div class="logo-text">TRA CỨU LỊCH THI<br>VIETMY COLLEGE</div>
+        </div>
+        <div class="total-badge">CA THI: <span id="totalCount">0</span></div>
+    </div>
+
+    <div id="fullDateDisplay" class="full-date-display">...</div>
+    <div class="date-container" id="dateNav"></div>
+
+    <div class="container-fluid px-3">
+        <div class="row g-2 mb-2">
+            <div class="col-4">
+                <select id="selCoso" class="form-select form-select-sm fw-bold shadow-none" onchange="resetPageAndRender()"><option value="">Cơ sở</option></select>
+            </div>
+            <div class="col-8">
+                <input id="inpSearch" class="form-control form-select-sm fw-bold shadow-none" placeholder="Tìm Lớp, Môn, SV..." oninput="resetPageAndRender()">
+            </div>
+        </div>
+    </div>
+    
+    <div class="pagination-wrapper" id="pagination"></div>
+    <div id="loader"><div class="spinner-border text-white" role="status"></div><div class="text-white mt-2">Đang tải dữ liệu thi...</div></div>
+    <div class="schedule-grid" id="grid"></div>
+
+    <script>
+        // ===============================================
+        // THAY LINK APP SCRIPT MỚI CỦA BẠN VÀO ĐÂY
+        const API_URL = "https://script.google.com/macros/s/AKfycby18SZn-3u-bPATmzASEq2XlatFWR1dwStxyBkPxv5026xjfW-WeyMYeXjK9xf72lij/exec";
+        // ===============================================
+
+        let allData = { schedule: [], available: [] };
+        let currentDate = "";
+        let currentPage = 1;
+        const itemsPerPage = 20;
+
+        async function init() {
+            const d = new Date();
+            const todayStr = formatDate(d);
+            await loadData(todayStr);
+        }
+
+        async function loadData(dateStr) {
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('grid').innerHTML = '';
+            document.getElementById('pagination').innerHTML = '';
+            currentDate = dateStr;
+            
+            updateFullDateDisplay(dateStr);
+            // Render tạm date nav (có thể chưa có data available)
+            renderDateNav(); 
+
+            try {
+                const res = await fetch(`${API_URL}?date=${dateStr}&t=${Date.now()}`);
+                const data = await res.json();
+                
+                if(data.error) { 
+                    document.getElementById('grid').innerHTML = `<div class="text-white text-center w-100 p-3">${data.error}</div>`; 
+                    return; 
+                }
+
+                allData.available = data.available_sheets || []; // Danh sách các ngày có thi
+                
+                // Sort theo giờ thi
+                let rawSchedule = data.schedule || [];
+                allData.schedule = rawSchedule.sort((a, b) => parseTime(a.gio) - parseTime(b.gio));
+
+                // Nếu ngày hiện tại không có trong danh sách available, và danh sách available có dữ liệu
+                // Tự động nhảy tới ngày có lịch thi gần nhất đầu tiên
+                if (allData.available.length > 0 && !allData.available.includes(dateStr)) {
+                     // Nếu dữ liệu trả về rỗng (do sai ngày), gọi lại API với ngày đầu tiên có lịch
+                     // Tuy nhiên để tránh loop, ta chỉ load lại nếu data.schedule rỗng
+                     if(allData.schedule.length === 0) {
+                         // Redirect sang ngày đầu tiên có lịch
+                         console.log("Ngày này không có lịch, chuyển sang:", allData.available[0]);
+                         loadData(allData.available[0]);
+                         return;
+                     }
+                }
+
+                renderDateNav();
+                updateCosoDropdown();
+                resetPageAndRender();
+
+            } catch(e) {
+                console.error(e);
+                document.getElementById('grid').innerHTML = '<div class="text-white text-center w-100 p-3">Lỗi kết nối Server!</div>';
+            } finally {
+                document.getElementById('loader').style.display = 'none';
+            }
+        }
+
+        function updateFullDateDisplay(dateStr) {
+            const parts = dateStr.split('/');
+            const d = new Date(parts[2], parts[1] - 1, parts[0]);
+            const days = ['CHỦ NHẬT', 'THỨ 2', 'THỨ 3', 'THỨ 4', 'THỨ 5', 'THỨ 6', 'THỨ 7'];
+            const dayName = days[d.getDay()];
+            document.getElementById('fullDateDisplay').innerText = `${dayName}, ${dateStr}`;
+        }
+
+        function parseTime(timeStr) {
+            if (!timeStr) return 9999;
+            try {
+                const firstPart = timeStr.split('-')[0].trim();
+                const parts = firstPart.split(/[:h]/);
+                let h = parseInt(parts[0]);
+                let m = parts[1] ? parseInt(parts[1]) : 0;
+                return h * 60 + m;
+            } catch (e) { return 9999; }
+        }
+
+        function resetPageAndRender() { currentPage = 1; renderGrid(); }
+
+        function renderGrid() {
+            const grid = document.getElementById('grid');
+            const pagin = document.getElementById('pagination');
+            const cosoFilter = document.getElementById('selCoso').value;
+            const searchFilter = document.getElementById('inpSearch').value.toLowerCase();
+
+            const filtered = allData.schedule.filter(item => {
+                const searchStr = `${item.lop} ${item.mon} ${item.giamthi} ${item.phong} ${item.hinhthuc}`.toLowerCase();
+                const matchCoso = !cosoFilter || item.coso === cosoFilter;
+                const matchSearch = !searchFilter || searchStr.includes(searchFilter);
+                return matchCoso && matchSearch;
+            });
+
+            document.getElementById('totalCount').innerText = `${filtered.length}`;
+
+            if(filtered.length === 0) {
+                grid.innerHTML = '<div class="text-white text-center w-100 py-5" style="grid-column: 1 / -1">Không tìm thấy ca thi nào.</div>';
+                pagin.innerHTML = '';
+                return;
+            }
+
+            const totalPages = Math.ceil(filtered.length / itemsPerPage);
+            const start = (currentPage - 1) * itemsPerPage;
+            const pageData = filtered.slice(start, start + itemsPerPage);
+
+            grid.innerHTML = pageData.map((item, index) => {
+                const delay = (index % 10) * 0.05; 
+                
+                // Logic hiển thị phòng thi
+                let phongHienThi = item.phong;
+                if (!phongHienThi.toLowerCase().includes('phòng') && !phongHienThi.toLowerCase().includes('online')) {
+                    phongHienThi = "P." + phongHienThi;
+                }
+
+                return `
+                <div class="class-card animate__animated animate__fadeInUp" style="animation-delay: ${delay}s">
+                    <div class="card-body-custom">
+                        <div class="row-header">
+                            <div class="badge-time">${item.gio}</div>
+                            <div class="badge-form">${item.hinhthuc}</div>
+                        </div>
+                        
+                        <div>
+                            <div class="text-subject" title="${item.mon}">${item.mon}</div>
+                            <div class="text-class" title="${item.lop}">${item.lop}</div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="info-row" title="Giám thị">
+                                <i class="fa-solid fa-user-shield"></i> 
+                                <span>${item.giamthi || '--'}</span>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="info-row">
+                                <i class="fa-solid fa-location-dot"></i> 
+                                <span>${item.coso}</span>
+                            </div>
+                            <div class="badge-room">${phongHienThi}</div>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+
+            if(totalPages > 1) {
+                let html = '';
+                for(let i = 1; i <= totalPages; i++) {
+                    html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+                }
+                pagin.innerHTML = html;
+            } else { pagin.innerHTML = ''; }
+        }
+
+        function updateCosoDropdown() {
+            const sel = document.getElementById('selCoso');
+            const current = sel.value;
+            const list = [...new Set(allData.schedule.map(i => i.coso))].filter(Boolean);
+            sel.innerHTML = '<option value="">Cơ sở</option>' + list.map(c => `<option value="${c}">${c}</option>`).join('');
+            sel.value = current;
+        }
+
+        function renderDateNav() {
+            const nav = document.getElementById('dateNav');
+            nav.innerHTML = '';
+            
+            // Logic mới: Hiển thị các ngày có trong available (từ sheet)
+            // Nếu available rỗng (lần đầu load), hiển thị +/- 3 ngày quanh hôm nay
+            
+            let datesToShow = [];
+            if (allData.available && allData.available.length > 0) {
+                datesToShow = allData.available;
+            } else {
+                const today = new Date();
+                for(let i=-2; i<=2; i++) {
+                    const d = new Date(); d.setDate(today.getDate() + i);
+                    datesToShow.push(formatDate(d));
+                }
+            }
+
+            datesToShow.forEach(dStr => {
+                const parts = dStr.split('/');
+                // Chỉ hiển thị ngày/tháng để nút gọn hơn
+                const displayDate = `${parts[0]}/${parts[1]}`; 
+                
+                const btn = document.createElement('button');
+                btn.className = `date-btn ${dStr === currentDate ? 'active' : ''}`;
+                btn.innerHTML = `<div>${displayDate}</div>`;
+                btn.onclick = () => { if(dStr !== currentDate) loadData(dStr); };
+                nav.appendChild(btn);
+                
+                if(dStr === currentDate) setTimeout(()=>btn.scrollIntoView({inline:"center",behavior:"smooth"}),100);
+            });
+        }
+        
+        function formatDate(date) {
+            return `${String(date.getDate()).padStart(2,'0')}/${String(date.getMonth()+1).padStart(2,'0')}/${date.getFullYear()}`;
+        }
+
+        function goToPage(p) { currentPage = p; renderGrid(); window.scrollTo({top:0, behavior:'smooth'}); }
+        
+        init();
+    </script>
 </body>
 </html>
