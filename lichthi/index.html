@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>Lịch Thi Theo Tuần</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Lịch Thi Tuần - VietMy College</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
@@ -12,156 +12,169 @@
     <style>
         :root {
             --glass: rgba(255, 255, 255, 0.98);
-            --primary: #4f46e5; 
-            --accent: #f97316; /* Màu cam nổi bật cho ngày thi */
-            --bg-grad: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary: #2563eb; 
+            --accent: #f97316; /* Cam nổi bật */
+            --bg-grad: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
         }
 
         body {
             font-family: 'Montserrat', sans-serif;
             background: var(--bg-grad);
-            min-height: 100vh; margin: 0; padding-bottom: 60px;
+            min-height: 100vh; margin: 0; padding-bottom: 60px; color: #333;
         }
 
         /* HEADER */
         .glass-header {
-            background: rgba(255,255,255,0.95); padding: 10px 15px; 
+            background: rgba(255,255,255,0.95); padding: 12px 20px; 
             position: sticky; top: 0; z-index: 999;
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;
+            border-bottom: 4px solid var(--accent);
         }
-        .logo-area { display: flex; align-items: center; gap: 10px; }
-        .logo-img { height: 40px; }
-        .logo-text { font-weight: 800; color: var(--primary); font-size: 0.9rem; line-height: 1.2; text-transform: uppercase;}
+        .logo-area { display: flex; align-items: center; gap: 15px; }
+        .logo-img { height: 45px; }
+        .logo-text { font-weight: 900; color: #1e3a8a; font-size: 1.1rem; line-height: 1.1; text-transform: uppercase;}
 
-        /* WEEK NAVIGATOR */
+        /* NAVIGATOR */
         .week-nav {
-            display: flex; gap: 10px; margin-top: 10px;
-            background: #f1f5f9; padding: 5px; border-radius: 12px;
+            display: flex; gap: 10px; margin-top: 15px;
+            background: rgba(255,255,255,0.2); padding: 5px; border-radius: 12px;
         }
         .nav-btn {
-            flex: 1; border: none; padding: 8px; border-radius: 8px;
-            font-weight: 700; font-size: 0.85rem; color: #64748b; background: transparent;
-            transition: 0.3s;
+            flex: 1; border: none; padding: 10px; border-radius: 8px;
+            font-weight: 800; font-size: 0.9rem; color: rgba(255,255,255,0.8); background: transparent;
+            text-transform: uppercase; transition: 0.3s; border: 1px solid transparent;
         }
+        .nav-btn:hover { background: rgba(255,255,255,0.1); }
         .nav-btn.active {
-            background: var(--primary); color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            background: #fff; color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            border-color: #fff;
         }
+        .week-range-text { color: rgba(255,255,255,0.8); font-size: 0.8rem; text-align: center; margin-top: 5px; font-weight: 600; }
 
-        /* FILTERS */
-        .filter-bar { margin-top: 15px; }
+        /* FILTER BAR */
+        .filter-container { background: rgba(255,255,255,0.1); padding: 15px; margin-bottom: 20px; border-radius: 10px; margin-top: 20px;}
         .form-select, .form-control {
-            border-radius: 8px; border: 1px solid #e2e8f0; font-weight: 600; font-size: 0.85rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-radius: 6px; border: none; font-weight: 700; height: 40px; font-size: 0.9rem;
         }
-        .form-select:focus, .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2); }
 
-        /* GRID & CARD */
+        /* GRID SYSTEM - 4 CỘT DESKTOP */
         .schedule-grid {
-            display: grid; gap: 12px; padding: 15px;
-            grid-template-columns: repeat(1, 1fr); /* Mobile 1 cột */
+            display: grid; gap: 20px; padding: 0 10px;
+            grid-template-columns: repeat(1, 1fr); /* Mobile: 1 cột */
         }
-        @media(min-width: 768px) { .schedule-grid { grid-template-columns: repeat(3, 1fr); } }
-        @media(min-width: 1200px) { .schedule-grid { grid-template-columns: repeat(5, 1fr); } }
+        /* Tablet: 2 cột */
+        @media(min-width: 768px) { .schedule-grid { grid-template-columns: repeat(2, 1fr); } }
+        /* Desktop: 4 cột theo yêu cầu */
+        @media(min-width: 1200px) { .schedule-grid { grid-template-columns: repeat(4, 1fr); } }
 
+        /* CARD DESIGN - SPACIOUS & CLEAR */
         .exam-card {
-            background: var(--glass); border-radius: 12px;
-            border-left: 5px solid var(--accent); /* Viền màu cam */
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            display: flex; flex-direction: column; overflow: hidden;
-            position: relative; transition: transform 0.2s;
+            background: #fff; border-radius: 12px;
+            overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            display: flex; flex-direction: column;
+            transition: transform 0.2s; border: 1px solid rgba(255,255,255,0.2);
         }
-        .exam-card:hover { transform: translateY(-3px); }
+        .exam-card:hover { transform: translateY(-5px); }
 
-        .card-header-date {
-            background: #fff7ed; color: var(--accent);
-            padding: 6px 12px; font-weight: 800; font-size: 0.8rem;
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px dashed #fdba74;
+        /* CARD HEADER: NGÀY & GIỜ TO */
+        .card-header-custom {
+            background: #fff7ed; border-bottom: 2px dashed #fdba74;
+            padding: 15px; text-align: center;
         }
-        
-        .card-body { padding: 10px 12px; flex: 1; }
-        
-        .subject-name {
-            font-size: 1rem; font-weight: 800; color: #1e293b;
-            margin-bottom: 5px; line-height: 1.3;
-            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        .big-date {
+            color: var(--accent); font-weight: 900; font-size: 1.1rem; 
+            text-transform: uppercase; margin-bottom: 5px; letter-spacing: 0.5px;
         }
-        
-        .class-badge {
-            display: inline-block; background: #e0e7ff; color: var(--primary);
-            font-size: 0.7rem; font-weight: 700; padding: 3px 8px; border-radius: 4px;
-            margin-bottom: 8px;
+        .big-time {
+            color: #1e3a8a; font-weight: 900; font-size: 2.2rem; line-height: 1;
         }
 
-        .info-table { width: 100%; font-size: 0.75rem; color: #475569; }
-        .info-table td { padding: 2px 0; vertical-align: top; }
-        .info-table i { width: 18px; color: #94a3b8; }
-        .info-val { font-weight: 600; color: #334155; }
+        /* CARD BODY: THÔNG TIN CHI TIẾT */
+        .card-body-custom { padding: 15px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+        
+        .info-row {
+            display: grid; grid-template-columns: 85px 1fr; /* Cột Label cố định 85px */
+            align-items: flex-start; gap: 5px; font-size: 0.85rem;
+            border-bottom: 1px solid #f1f5f9; padding-bottom: 6px; margin-bottom: 2px;
+        }
+        .info-row:last-child { border-bottom: none; }
+        
+        .info-label {
+            color: #64748b; font-weight: 700; font-size: 0.75rem; 
+            text-transform: uppercase; padding-top: 2px;
+        }
+        .info-val {
+            color: #1e293b; font-weight: 700; line-height: 1.3; text-align: left;
+        }
+        .highlight-val { color: var(--primary); font-weight: 800; font-size: 0.95rem; } /* Môn thi to hơn */
 
+        /* FOOTER CARD */
         .card-footer-custom {
-            padding: 8px 12px; background: #f8fafc; border-top: 1px solid #e2e8f0;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .room-badge {
-            background: #dcfce7; color: #166534; padding: 3px 10px; border-radius: 20px;
-            font-weight: 800; font-size: 0.75rem; border: 1px solid #bbf7d0;
-        }
-        .format-badge {
-            font-size: 0.7rem; font-weight: 700; color: #64748b; text-transform: uppercase;
+            background: #1e3a8a; color: white; padding: 10px;
+            text-align: center; font-weight: 700; font-size: 0.85rem; text-transform: uppercase;
         }
 
-        /* PAGINATION & LOADER */
-        #pagination { display: flex; justify-content: center; gap: 5px; padding-bottom: 20px; flex-wrap: wrap; }
-        .page-btn { width: 35px; height: 35px; border: none; border-radius: 8px; background: rgba(255,255,255,0.4); font-weight: 700; color: white; }
-        .page-btn.active { background: white; color: var(--primary); }
+        /* LOADER & PAGINATION */
+        #pagination { margin-top: 30px; display: flex; justify-content: center; gap: 5px; }
+        .page-btn { width: 40px; height: 40px; border-radius: 8px; border: none; font-weight: 800; background: rgba(255,255,255,0.3); color: white; }
+        .page-btn.active { background: white; color: var(--primary); transform: scale(1.1); }
         
-        #loader { text-align: center; color: white; padding: 30px; display: none; }
-        #emptyMsg { text-align: center; color: white; padding: 30px; display: none; font-weight: 600; }
-        
-        .week-range-text { font-size: 0.7rem; color: #64748b; text-align: center; margin-top: 2px; font-weight: 500;}
+        #loader { text-align: center; color: white; padding: 50px; display: none; }
+        #emptyMsg { text-align: center; color: white; font-weight: 600; padding: 30px; display: none; }
     </style>
 </head>
 <body>
 
     <div class="glass-header">
-        <div class="logo-area">
-            <img src="https://github.com/duongcanhquan/image/blob/main/Logo%20Cao%20%C4%91a%CC%86%CC%89ng%20Vie%CC%A3%CC%82t%20My%CC%83%20-%20ba%CC%89n%20chua%CC%82%CC%89n%202025-01.png?raw=true" class="logo-img">
-            <div class="logo-text">TRA CỨU LỊCH THI<br>VIETMY COLLEGE</div>
-        </div>
-
-        <div class="week-nav">
-            <button class="nav-btn active" id="btnCurrent" onclick="switchWeek('current')">TUẦN NÀY</button>
-            <button class="nav-btn" id="btnNext" onclick="switchWeek('next')">TUẦN SAU</button>
-        </div>
-        <div class="week-range-text" id="weekRangeDisplay">...</div>
-
-        <div class="filter-bar row g-2">
-            <div class="col-6 col-md-3">
-                <select id="selCoso" class="form-select shadow-none" onchange="resetPageAndRender()">
-                    <option value="">Tất cả Cơ sở</option>
-                </select>
+        <div class="container-fluid">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="logo-area">
+                    <img src="https://github.com/duongcanhquan/image/blob/main/Logo%20Cao%20%C4%91a%CC%86%CC%89ng%20Vie%CC%A3%CC%82t%20My%CC%83%20-%20ba%CC%89n%20chua%CC%82%CC%89n%202025-01.png?raw=true" class="logo-img">
+                    <div class="logo-text d-none d-md-block">LỊCH THI HỌC KỲ<br>VIETMY COLLEGE</div>
+                </div>
+                <div style="font-size: 0.8rem; font-weight: 700; color: #1e3a8a;">
+                    Tổng số ca: <span id="totalCount" class="badge bg-danger rounded-pill">0</span>
+                </div>
             </div>
-            <div class="col-6 col-md-3">
-                <select id="selHinhThuc" class="form-select shadow-none" onchange="resetPageAndRender()">
-                    <option value="">Hình thức thi</option>
-                </select>
-            </div>
-            <div class="col-12 col-md-6">
-                <input id="inpSearch" class="form-control shadow-none" placeholder="Tìm Môn, Giám thị, Lớp..." oninput="resetPageAndRender()">
-            </div>
-        </div>
-        
-        <div class="text-end mt-2" style="font-size: 0.7rem; color: #64748b; font-weight: 600;">
-            Tổng số ca thi: <span id="totalCount" class="text-danger">0</span>
         </div>
     </div>
 
-    <div id="loader"><div class="spinner-border" role="status"></div><div class="mt-2">Đang tải dữ liệu...</div></div>
-    
-    <div class="schedule-grid" id="grid"></div>
-    <div id="emptyMsg">Không có lịch thi nào trong tuần này.</div>
-    <div id="pagination"></div>
+    <div class="container-fluid px-4">
+        
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="week-nav">
+                    <button class="nav-btn active" id="btnCurrent" onclick="switchWeek('current')">TUẦN NÀY</button>
+                    <button class="nav-btn" id="btnNext" onclick="switchWeek('next')">TUẦN SAU</button>
+                </div>
+                <div class="week-range-text" id="weekRangeDisplay">...</div>
+            </div>
+        </div>
+
+        <div class="filter-container">
+            <div class="row g-2">
+                <div class="col-md-3">
+                    <select id="selCoso" class="form-select shadow-none" onchange="resetPageAndRender()">
+                        <option value="">-- Lọc theo Cơ Sở --</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select id="selHinhThuc" class="form-select shadow-none" onchange="resetPageAndRender()">
+                        <option value="">-- Lọc Hình Thức Thi --</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <input id="inpSearch" class="form-control shadow-none" placeholder="🔍 Nhập Tên môn, Giám thị, Lớp..." oninput="resetPageAndRender()">
+                </div>
+            </div>
+        </div>
+
+        <div id="loader"><div class="spinner-border" style="width: 3rem; height: 3rem;"></div><div class="mt-3 font-weight-bold">Đang tải lịch thi...</div></div>
+        <div class="schedule-grid" id="grid"></div>
+        <div id="emptyMsg">Không tìm thấy lịch thi nào phù hợp.</div>
+        
+        <div id="pagination"></div>
+    </div>
 
     <script>
         // ===============================================
@@ -171,18 +184,15 @@
         let allData = [];
         let currentWeekMode = 'current';
         let currentPage = 1;
-        const itemsPerPage = 15;
+        // Desktop 4 cột x 3 dòng = 12 item một trang để nhìn đẹp nhất
+        const itemsPerPage = 12; 
 
-        // Map thứ
-        const dayMap = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+        const dayMap = ['CN', 'THỨ 2', 'THỨ 3', 'THỨ 4', 'THỨ 5', 'THỨ 6', 'THỨ 7'];
 
-        function init() {
-            switchWeek('current');
-        }
+        function init() { switchWeek('current'); }
 
         function switchWeek(mode) {
             currentWeekMode = mode;
-            // Update UI Button
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(mode === 'current' ? 'btnCurrent' : 'btnNext').classList.add('active');
             loadData(mode);
@@ -201,16 +211,14 @@
                 if (data.error) { alert(data.error); return; }
 
                 allData = data.schedule || [];
-                
-                // Hiển thị khoảng thời gian
-                document.getElementById('weekRangeDisplay').innerText = `(${data.week_start} - ${data.week_end})`;
+                document.getElementById('weekRangeDisplay').innerText = `(Từ ${data.week_start} đến ${data.week_end})`;
 
                 populateDropdowns();
                 resetPageAndRender();
 
             } catch (e) {
                 console.error(e);
-                document.getElementById('emptyMsg').innerText = "Lỗi kết nối!";
+                document.getElementById('emptyMsg').innerText = "Lỗi kết nối máy chủ!";
                 document.getElementById('emptyMsg').style.display = 'block';
             } finally {
                 document.getElementById('loader').style.display = 'none';
@@ -218,18 +226,16 @@
         }
 
         function populateDropdowns() {
-            // Cơ sở
             const cosos = [...new Set(allData.map(i => i.coso))].filter(Boolean);
             const selCoso = document.getElementById('selCoso');
             const curCoso = selCoso.value;
-            selCoso.innerHTML = '<option value="">Tất cả Cơ sở</option>' + cosos.map(c => `<option value="${c}">${c}</option>`).join('');
+            selCoso.innerHTML = '<option value="">-- Tất cả Cơ sở --</option>' + cosos.map(c => `<option value="${c}">${c}</option>`).join('');
             selCoso.value = cosos.includes(curCoso) ? curCoso : "";
 
-            // Hình thức
             const hinhthucs = [...new Set(allData.map(i => i.hinhthuc))].filter(Boolean);
             const selHT = document.getElementById('selHinhThuc');
             const curHT = selHT.value;
-            selHT.innerHTML = '<option value="">Hình thức thi</option>' + hinhthucs.map(h => `<option value="${h}">${h}</option>`).join('');
+            selHT.innerHTML = '<option value="">-- Hình thức thi --</option>' + hinhthucs.map(h => `<option value="${h}">${h}</option>`).join('');
             selHT.value = hinhthucs.includes(curHT) ? curHT : "";
         }
 
@@ -239,19 +245,15 @@
             const grid = document.getElementById('grid');
             const pagin = document.getElementById('pagination');
             
-            // Get Filters
             const fCoso = document.getElementById('selCoso').value;
             const fHT = document.getElementById('selHinhThuc').value;
             const fSearch = document.getElementById('inpSearch').value.toLowerCase();
 
-            // Filter logic
             const filtered = allData.filter(item => {
                 const searchSource = `${item.mon} ${item.giamthi} ${item.lop}`.toLowerCase();
-                
                 const matchCoso = !fCoso || item.coso === fCoso;
                 const matchHT = !fHT || item.hinhthuc === fHT;
                 const matchSearch = !fSearch || searchSource.includes(fSearch);
-                
                 return matchCoso && matchHT && matchSearch;
             });
 
@@ -266,7 +268,6 @@
                 document.getElementById('emptyMsg').style.display = 'none';
             }
 
-            // Pagination
             const totalPages = Math.ceil(filtered.length / itemsPerPage);
             const start = (currentPage - 1) * itemsPerPage;
             const pageData = filtered.slice(start, start + itemsPerPage);
@@ -275,47 +276,53 @@
                 const dateParts = item.ngay.split('/');
                 const dObj = new Date(dateParts[2], dateParts[1]-1, dateParts[0]);
                 const dayName = dayMap[dObj.getDay()];
+                const delay = index * 0.05;
 
                 return `
-                <div class="exam-card animate__animated animate__fadeInUp" style="animation-delay: ${index * 0.05}s">
-                    <div class="card-header-date">
-                        <span><i class="fa-regular fa-calendar-check me-1"></i> ${dayName}, ${item.ngay}</span>
-                        <span style="color: #333; font-weight:900;">${item.gio}</span>
+                <div class="exam-card animate__animated animate__fadeInUp" style="animation-delay: ${delay}s">
+                    <div class="card-header-custom">
+                        <div class="big-date">${dayName}, ${item.ngay}</div>
+                        <div class="big-time">${item.gio}</div>
                     </div>
-                    <div class="card-body">
-                        <div class="subject-name" title="${item.mon}">${item.mon}</div>
-                        <div class="class-badge">${item.lop}</div>
-                        
-                        <table class="info-table">
-                            <tr>
-                                <td><i class="fa-solid fa-user-shield"></i></td>
-                                <td class="info-val">${item.giamthi || '--'}</td>
-                            </tr>
-                            <tr>
-                                <td><i class="fa-solid fa-map-pin"></i></td>
-                                <td>${item.coso}</td>
-                            </tr>
-                        </table>
+                    
+                    <div class="card-body-custom">
+                        <div class="info-row">
+                            <span class="info-label">MÔN THI:</span>
+                            <span class="info-val highlight-val">${item.mon}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">LỚP:</span>
+                            <span class="info-val">${item.lop}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">GIÁM THỊ:</span>
+                            <span class="info-val">${item.giamthi || '--'}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">ĐỊA ĐIỂM:</span>
+                            <span class="info-val">${item.phong.includes('P.') ? item.phong : 'P.'+item.phong}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">CƠ SỞ:</span>
+                            <span class="info-val">${item.coso}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">HÌNH THỨC:</span>
+                            <span class="info-val" style="color:var(--accent)">${item.hinhthuc}</span>
+                        </div>
                     </div>
+
                     <div class="card-footer-custom">
-                        <div class="format-badge">${item.hinhthuc || 'THI'}</div>
-                        <div class="room-badge">${item.phong.includes('P.') ? item.phong : 'P.'+item.phong}</div>
+                        CHÚC CÁC BẠN THI TỐT
                     </div>
                 </div>
                 `;
             }).join('');
 
-            // Render Pagination Buttons
             if(totalPages > 1) {
                 let html = '';
-                // Logic nút gọn (First, Prev, Current, Next, Last) có thể thêm nếu muốn
-                // Hiện tại hiển thị hết nếu ít trang
                 for(let i = 1; i <= totalPages; i++) {
-                    if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
-                         html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
-                    } else if (i === currentPage - 2 || i === currentPage + 2) {
-                        html += `<span style="color:white; align-self:center;">...</span>`;
-                    }
+                    html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
                 }
                 pagin.innerHTML = html;
             } else { pagin.innerHTML = ''; }
