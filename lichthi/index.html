@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>Lịch Thi Tuần - VietMy College</title>
+    <title>Lịch Thi VietMy College</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -13,7 +13,8 @@
         :root {
             --glass: rgba(255, 255, 255, 0.98);
             --primary: #2563eb; 
-            --accent: #f97316; /* Cam nổi bật */
+            --accent: #f97316; 
+            --danger: #dc2626;
             --bg-grad: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
         }
 
@@ -25,169 +26,168 @@
 
         /* HEADER */
         .glass-header {
-            background: rgba(255,255,255,0.95); padding: 12px 20px; 
+            background: rgba(255,255,255,0.95); padding: 12px 15px; 
             position: sticky; top: 0; z-index: 999;
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            border-bottom: 4px solid var(--accent);
+            border-bottom: 3px solid var(--accent);
         }
-        .logo-area { display: flex; align-items: center; gap: 15px; }
-        .logo-img { height: 45px; }
-        .logo-text { font-weight: 900; color: #1e3a8a; font-size: 1.1rem; line-height: 1.1; text-transform: uppercase;}
+        .logo-area { display: flex; align-items: center; gap: 10px; }
+        .logo-img { height: 40px; }
+        .logo-text { font-weight: 900; color: #1e3a8a; font-size: 1rem; line-height: 1.1; text-transform: uppercase;}
 
         /* NAVIGATOR */
         .week-nav {
-            display: flex; gap: 10px; margin-top: 15px;
-            background: rgba(255,255,255,0.2); padding: 5px; border-radius: 12px;
+            display: flex; gap: 8px; margin-top: 15px;
+            background: rgba(255,255,255,0.2); padding: 5px; border-radius: 10px;
         }
         .nav-btn {
             flex: 1; border: none; padding: 10px; border-radius: 8px;
-            font-weight: 800; font-size: 0.9rem; color: rgba(255,255,255,0.8); background: transparent;
-            text-transform: uppercase; transition: 0.3s; border: 1px solid transparent;
+            font-weight: 800; font-size: 0.85rem; color: rgba(255,255,255,0.9); background: transparent;
+            text-transform: uppercase; transition: 0.3s;
         }
-        .nav-btn:hover { background: rgba(255,255,255,0.1); }
         .nav-btn.active {
             background: #fff; color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            border-color: #fff;
         }
         .week-range-text { color: rgba(255,255,255,0.8); font-size: 0.8rem; text-align: center; margin-top: 5px; font-weight: 600; }
 
         /* FILTER BAR */
-        .filter-container { background: rgba(255,255,255,0.1); padding: 15px; margin-bottom: 20px; border-radius: 10px; margin-top: 20px;}
+        .filter-container { background: rgba(255,255,255,0.1); padding: 10px; margin-bottom: 15px; border-radius: 10px; margin-top: 15px;}
         .form-select, .form-control {
-            border-radius: 6px; border: none; font-weight: 700; height: 40px; font-size: 0.9rem;
+            border-radius: 6px; border: none; font-weight: 700; height: 38px; font-size: 0.85rem;
         }
 
-        /* GRID SYSTEM - 4 CỘT DESKTOP */
+        /* GRID SYSTEM */
         .schedule-grid {
-            display: grid; gap: 20px; padding: 0 10px;
-            grid-template-columns: repeat(1, 1fr); /* Mobile: 1 cột */
+            display: grid; gap: 10px; padding: 0 5px;
+            /* QUAN TRỌNG: Mobile chia 2 cột (Nửa màn hình) */
+            grid-template-columns: repeat(2, 1fr); 
         }
-        /* Tablet: 2 cột */
-        @media(min-width: 768px) { .schedule-grid { grid-template-columns: repeat(2, 1fr); } }
-        /* Desktop: 4 cột theo yêu cầu */
-        @media(min-width: 1200px) { .schedule-grid { grid-template-columns: repeat(4, 1fr); } }
+        /* Tablet: 3 cột */
+        @media(min-width: 768px) { .schedule-grid { grid-template-columns: repeat(3, 1fr); gap: 15px; } }
+        /* Desktop: 4 cột */
+        @media(min-width: 1200px) { .schedule-grid { grid-template-columns: repeat(4, 1fr); gap: 20px;} }
 
-        /* CARD DESIGN - SPACIOUS & CLEAR */
+        /* CARD DESIGN */
         .exam-card {
-            background: #fff; border-radius: 12px;
-            overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            background: #fff; border-radius: 10px;
+            overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             display: flex; flex-direction: column;
-            transition: transform 0.2s; border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.2);
+            height: 100%; /* Để các card cao bằng nhau */
         }
-        .exam-card:hover { transform: translateY(-5px); }
-
-        /* CARD HEADER: NGÀY & GIỜ TO */
+        
+        /* CARD HEADER: TÊN MÔN THI */
         .card-header-custom {
             background: #fff7ed; border-bottom: 2px dashed #fdba74;
-            padding: 15px; text-align: center;
+            padding: 10px 8px; text-align: center;
+            min-height: 60px; /* Đảm bảo chiều cao tối thiểu */
+            display: flex; align-items: center; justify-content: center;
         }
-        .big-date {
-            color: var(--accent); font-weight: 900; font-size: 1.1rem; 
-            text-transform: uppercase; margin-bottom: 5px; letter-spacing: 0.5px;
-        }
-        .big-time {
-            color: #1e3a8a; font-weight: 900; font-size: 2.2rem; line-height: 1;
+        .subject-title {
+            color: #1e3a8a; font-weight: 900; font-size: 0.95rem; 
+            text-transform: uppercase; line-height: 1.2;
+            display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
         }
 
-        /* CARD BODY: THÔNG TIN CHI TIẾT */
-        .card-body-custom { padding: 15px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+        /* CARD BODY */
+        .card-body-custom { padding: 10px; flex: 1; display: flex; flex-direction: column; gap: 5px; }
         
         .info-row {
-            display: grid; grid-template-columns: 85px 1fr; /* Cột Label cố định 85px */
-            align-items: flex-start; gap: 5px; font-size: 0.85rem;
-            border-bottom: 1px solid #f1f5f9; padding-bottom: 6px; margin-bottom: 2px;
+            display: flex; flex-direction: column; /* Mobile: Label trên, Value dưới cho gọn */
+            border-bottom: 1px solid #f1f5f9; padding-bottom: 4px; margin-bottom: 2px;
         }
         .info-row:last-child { border-bottom: none; }
         
         .info-label {
-            color: #64748b; font-weight: 700; font-size: 0.75rem; 
-            text-transform: uppercase; padding-top: 2px;
+            color: #64748b; font-weight: 700; font-size: 0.65rem; 
+            text-transform: uppercase;
         }
         .info-val {
-            color: #1e293b; font-weight: 700; line-height: 1.3; text-align: left;
+            color: #334155; font-weight: 700; font-size: 0.8rem; line-height: 1.2;
+            word-break: break-word;
         }
-        .highlight-val { color: var(--primary); font-weight: 800; font-size: 0.95rem; } /* Môn thi to hơn */
-
-        /* FOOTER CARD */
-        .card-footer-custom {
-            background: #1e3a8a; color: white; padding: 10px;
-            text-align: center; font-weight: 700; font-size: 0.85rem; text-transform: uppercase;
-        }
-
-        /* LOADER & PAGINATION */
-        #pagination { margin-top: 30px; display: flex; justify-content: center; gap: 5px; }
-        .page-btn { width: 40px; height: 40px; border-radius: 8px; border: none; font-weight: 800; background: rgba(255,255,255,0.3); color: white; }
-        .page-btn.active { background: white; color: var(--primary); transform: scale(1.1); }
         
-        #loader { text-align: center; color: white; padding: 50px; display: none; }
+        /* Highlight đặc biệt cho Ngày và Giờ */
+        .highlight-date { color: var(--accent); font-weight: 800; font-size: 0.9rem; }
+        .highlight-time { color: var(--primary); font-weight: 800; font-size: 0.9rem; }
+
+        /* FOOTER CARD: NOTE */
+        .card-footer-custom {
+            background: #fef2f2; color: var(--danger); padding: 8px;
+            text-align: center; font-weight: 700; font-size: 0.75rem; 
+            border-top: 1px solid #fee2e2;
+            min-height: 30px; display: flex; align-items: center; justify-content: center;
+        }
+        .note-empty { background: #f8fafc; color: #94a3b8; font-weight: 500; font-style: italic; }
+
+        /* PAGINATION */
+        #pagination { margin-top: 20px; display: flex; justify-content: center; gap: 5px; }
+        .page-btn { width: 35px; height: 35px; border-radius: 8px; border: none; font-weight: 800; background: rgba(255,255,255,0.3); color: white; font-size: 0.8rem; }
+        .page-btn.active { background: white; color: var(--primary); }
+        
+        #loader { text-align: center; color: white; padding: 40px; display: none; }
         #emptyMsg { text-align: center; color: white; font-weight: 600; padding: 30px; display: none; }
     </style>
 </head>
 <body>
 
     <div class="glass-header">
-        <div class="container-fluid">
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="logo-area">
-                    <img src="https://github.com/duongcanhquan/image/blob/main/Logo%20Cao%20%C4%91a%CC%86%CC%89ng%20Vie%CC%A3%CC%82t%20My%CC%83%20-%20ba%CC%89n%20chua%CC%82%CC%89n%202025-01.png?raw=true" class="logo-img">
-                    <div class="logo-text d-none d-md-block">LỊCH THI HỌC KỲ<br>VIETMY COLLEGE</div>
-                </div>
-                <div style="font-size: 0.8rem; font-weight: 700; color: #1e3a8a;">
-                    Tổng số ca: <span id="totalCount" class="badge bg-danger rounded-pill">0</span>
-                </div>
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="logo-area">
+                <img src="https://github.com/duongcanhquan/image/blob/main/Logo%20Cao%20%C4%91a%CC%86%CC%89ng%20Vie%CC%A3%CC%82t%20My%CC%83%20-%20ba%CC%89n%20chua%CC%82%CC%89n%202025-01.png?raw=true" class="logo-img">
+                <div class="logo-text">TRA CỨU LỊCH THI</div>
+            </div>
+            <div style="font-size: 0.7rem; font-weight: 700; color: #1e3a8a; text-align: right;">
+                Tổng: <span id="totalCount" class="badge bg-danger rounded-pill">0</span>
             </div>
         </div>
     </div>
 
-    <div class="container-fluid px-4">
+    <div class="container-fluid px-2">
         
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="week-nav">
-                    <button class="nav-btn active" id="btnCurrent" onclick="switchWeek('current')">TUẦN NÀY</button>
-                    <button class="nav-btn" id="btnNext" onclick="switchWeek('next')">TUẦN SAU</button>
-                </div>
-                <div class="week-range-text" id="weekRangeDisplay">...</div>
-            </div>
+        <div class="week-nav">
+            <button class="nav-btn active" id="btnCurrent" onclick="switchWeek('current')">TUẦN NÀY</button>
+            <button class="nav-btn" id="btnNext" onclick="switchWeek('next')">TUẦN SAU</button>
         </div>
+        <div class="week-range-text" id="weekRangeDisplay">...</div>
 
         <div class="filter-container">
             <div class="row g-2">
-                <div class="col-md-3">
+                <div class="col-6">
                     <select id="selCoso" class="form-select shadow-none" onchange="resetPageAndRender()">
-                        <option value="">-- Lọc theo Cơ Sở --</option>
+                        <option value="">Cơ Sở</option>
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-6">
                     <select id="selHinhThuc" class="form-select shadow-none" onchange="resetPageAndRender()">
-                        <option value="">-- Lọc Hình Thức Thi --</option>
+                        <option value="">Hình Thức</option>
                     </select>
                 </div>
-                <div class="col-md-6">
-                    <input id="inpSearch" class="form-control shadow-none" placeholder="🔍 Nhập Tên môn, Giám thị, Lớp..." oninput="resetPageAndRender()">
+                <div class="col-12">
+                    <input id="inpSearch" class="form-control shadow-none" placeholder="🔍 Tìm Môn, Lớp, Giám thị..." oninput="resetPageAndRender()">
                 </div>
             </div>
         </div>
 
-        <div id="loader"><div class="spinner-border" style="width: 3rem; height: 3rem;"></div><div class="mt-3 font-weight-bold">Đang tải lịch thi...</div></div>
+        <div id="loader"><div class="spinner-border text-light" role="status"></div></div>
         <div class="schedule-grid" id="grid"></div>
-        <div id="emptyMsg">Không tìm thấy lịch thi nào phù hợp.</div>
+        <div id="emptyMsg">Không có lịch thi.</div>
         
         <div id="pagination"></div>
     </div>
 
     <script>
         // ===============================================
-        const API_URL = "https://script.google.com/macros/s/AKfycbzXBXoR9GNKfrIOC6xcWCuBLmvv78SBDWgm5ArUkfvG-Yar-2Gxo9jPBtrJ3Akj1jYH/exec";
+        // DÁN LINK DEPLOY CỦA BẠN VÀO ĐÂY
+        const API_URL = "https://script.google.com/macros/s/AKfycbzk520L7n-3rDo8ceMxERocJdl2PtNtiBH1OW16Iz625NQDFnpbDVbiNUMam6dbXyFr/exec";
         // ===============================================
 
         let allData = [];
         let currentWeekMode = 'current';
         let currentPage = 1;
-        // Desktop 4 cột x 3 dòng = 12 item một trang để nhìn đẹp nhất
-        const itemsPerPage = 12; 
+        const itemsPerPage = 16; // 4 dòng x 4 cột (desktop) hoặc 8 dòng x 2 cột (mobile)
 
-        const dayMap = ['CN', 'THỨ 2', 'THỨ 3', 'THỨ 4', 'THỨ 5', 'THỨ 6', 'THỨ 7'];
+        const dayMap = ['CN', 'T.2', 'T.3', 'T.4', 'T.5', 'T.6', 'T.7'];
 
         function init() { switchWeek('current'); }
 
@@ -211,14 +211,14 @@
                 if (data.error) { alert(data.error); return; }
 
                 allData = data.schedule || [];
-                document.getElementById('weekRangeDisplay').innerText = `(Từ ${data.week_start} đến ${data.week_end})`;
+                document.getElementById('weekRangeDisplay').innerText = `${data.week_start} - ${data.week_end}`;
 
                 populateDropdowns();
                 resetPageAndRender();
 
             } catch (e) {
                 console.error(e);
-                document.getElementById('emptyMsg').innerText = "Lỗi kết nối máy chủ!";
+                document.getElementById('emptyMsg').innerText = "Lỗi kết nối!";
                 document.getElementById('emptyMsg').style.display = 'block';
             } finally {
                 document.getElementById('loader').style.display = 'none';
@@ -229,13 +229,13 @@
             const cosos = [...new Set(allData.map(i => i.coso))].filter(Boolean);
             const selCoso = document.getElementById('selCoso');
             const curCoso = selCoso.value;
-            selCoso.innerHTML = '<option value="">-- Tất cả Cơ sở --</option>' + cosos.map(c => `<option value="${c}">${c}</option>`).join('');
+            selCoso.innerHTML = '<option value="">Cơ Sở</option>' + cosos.map(c => `<option value="${c}">${c}</option>`).join('');
             selCoso.value = cosos.includes(curCoso) ? curCoso : "";
 
             const hinhthucs = [...new Set(allData.map(i => i.hinhthuc))].filter(Boolean);
             const selHT = document.getElementById('selHinhThuc');
             const curHT = selHT.value;
-            selHT.innerHTML = '<option value="">-- Hình thức thi --</option>' + hinhthucs.map(h => `<option value="${h}">${h}</option>`).join('');
+            selHT.innerHTML = '<option value="">Hình Thức</option>' + hinhthucs.map(h => `<option value="${h}">${h}</option>`).join('');
             selHT.value = hinhthucs.includes(curHT) ? curHT : "";
         }
 
@@ -250,7 +250,7 @@
             const fSearch = document.getElementById('inpSearch').value.toLowerCase();
 
             const filtered = allData.filter(item => {
-                const searchSource = `${item.mon} ${item.giamthi} ${item.lop}`.toLowerCase();
+                const searchSource = `${item.mon} ${item.giamthi} ${item.lop} ${item.note}`.toLowerCase();
                 const matchCoso = !fCoso || item.coso === fCoso;
                 const matchHT = !fHT || item.hinhthuc === fHT;
                 const matchSearch = !fSearch || searchSource.includes(fSearch);
@@ -261,11 +261,7 @@
 
             if (filtered.length === 0) {
                 document.getElementById('emptyMsg').style.display = 'block';
-                grid.innerHTML = '';
-                pagin.innerHTML = '';
                 return;
-            } else {
-                document.getElementById('emptyMsg').style.display = 'none';
             }
 
             const totalPages = Math.ceil(filtered.length / itemsPerPage);
@@ -277,43 +273,51 @@
                 const dObj = new Date(dateParts[2], dateParts[1]-1, dateParts[0]);
                 const dayName = dayMap[dObj.getDay()];
                 const delay = index * 0.05;
+                
+                // Xử lý Note
+                const hasNote = item.note && item.note.trim() !== "";
+                const noteContent = hasNote ? `<i class="fa-solid fa-triangle-exclamation me-1"></i> ${item.note}` : "Chúc bạn thi tốt";
+                const noteClass = hasNote ? "card-footer-custom" : "card-footer-custom note-empty";
 
                 return `
                 <div class="exam-card animate__animated animate__fadeInUp" style="animation-delay: ${delay}s">
                     <div class="card-header-custom">
-                        <div class="big-date">${dayName}, ${item.ngay}</div>
-                        <div class="big-time">${item.gio}</div>
+                        <div class="subject-title">${item.mon}</div>
                     </div>
                     
                     <div class="card-body-custom">
                         <div class="info-row">
-                            <span class="info-label">MÔN THI:</span>
-                            <span class="info-val highlight-val">${item.mon}</span>
+                            <span class="info-label">NGÀY THI</span>
+                            <span class="info-val highlight-date">${dayName}, ${item.ngay}</span>
                         </div>
                         <div class="info-row">
-                            <span class="info-label">LỚP:</span>
+                            <span class="info-label">GIỜ THI</span>
+                            <span class="info-val highlight-time">${item.gio}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">LỚP</span>
                             <span class="info-val">${item.lop}</span>
                         </div>
                         <div class="info-row">
-                            <span class="info-label">GIÁM THỊ:</span>
+                            <span class="info-label">GIÁM THỊ</span>
                             <span class="info-val">${item.giamthi || '--'}</span>
                         </div>
                         <div class="info-row">
-                            <span class="info-label">ĐỊA ĐIỂM:</span>
+                            <span class="info-label">ĐỊA ĐIỂM</span>
                             <span class="info-val">${item.phong.includes('P.') ? item.phong : 'P.'+item.phong}</span>
                         </div>
-                        <div class="info-row">
-                            <span class="info-label">CƠ SỞ:</span>
+                         <div class="info-row">
+                            <span class="info-label">CƠ SỞ</span>
                             <span class="info-val">${item.coso}</span>
                         </div>
                         <div class="info-row">
-                            <span class="info-label">HÌNH THỨC:</span>
+                            <span class="info-label">HÌNH THỨC</span>
                             <span class="info-val" style="color:var(--accent)">${item.hinhthuc}</span>
                         </div>
                     </div>
 
-                    <div class="card-footer-custom">
-                        CHÚC CÁC BẠN THI TỐT
+                    <div class="${noteClass}">
+                        ${noteContent}
                     </div>
                 </div>
                 `;
@@ -325,7 +329,7 @@
                     html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
                 }
                 pagin.innerHTML = html;
-            } else { pagin.innerHTML = ''; }
+            }
         }
 
         function goToPage(p) { currentPage = p; renderGrid(); window.scrollTo({top:0, behavior:'smooth'}); }
